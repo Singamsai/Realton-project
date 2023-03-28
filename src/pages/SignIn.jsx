@@ -2,10 +2,13 @@ import React from 'react'
 import { useState } from 'react';
 import {AiFillEyeInvisible} from 'react-icons/ai'
 import {AiFillEye} from 'react-icons/ai'
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import OAth from '../components/OAth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import {toast} from 'react-toastify'
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const[showPassword, setShowPassword] = useState(false)
   const [formData, setformData] = useState({
     email:"",
@@ -17,6 +20,18 @@ const SignIn = () => {
       ...prevState, [e.target.id]:e.target.value,
     }))
   }
+  async function onSubmit(e){
+    e.preventDefault()
+    try {
+      const auth = getAuth()
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      if(userCredential.user){
+        navigate('/')
+      }
+    } catch (error) {
+      toast.error("please check the credentials")
+    }
+  }
   return (
     <section>
       <h1 className='text-3xl text-center mt-6 font-bold'>Sign In</h1>
@@ -26,7 +41,7 @@ const SignIn = () => {
           alt="key" className='w-full rounded-2xl'></img>
         </div>
         <div className='w-full md:w-[67%] lg:w-[40%] lg:ml-20 '>
-          <form >
+          <form onSubmit={onSubmit}>
             <input  type="email" id="email" value={email}
             onChange={onChange}
             placeholder="Email Address"

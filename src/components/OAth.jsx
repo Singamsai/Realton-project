@@ -1,9 +1,10 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore'
+import { doc, serverTimestamp, setDoc, getDoc } from 'firebase/firestore'
 import React from 'react'
 import {FcGoogle} from 'react-icons/fc'
 import { useNavigate } from 'react-router'
 import {toast} from 'react-toastify'
+import { db } from '../firebase'
 
 export default function OAth() {
   const navigate = useNavigate()
